@@ -11,7 +11,7 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/hello', function (Request $request) {
     return response()->json([
-        "Hello" => "World"
+        "Hello" => "Laravel"
     ]);
 });
 
