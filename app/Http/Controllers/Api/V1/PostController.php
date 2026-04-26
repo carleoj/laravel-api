@@ -4,32 +4,25 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\StorePostRequest;
+use App\Models\Post;
 
 class PostController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource. (GET)
      */
     public function index()
     {
-        return [
-            [
-                'id' => '1',
-                'title' => 'Test Title',
-                'body' => 'Test Body'
-            ]
-        ];
+        return Post::all();
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created resource in storage. (POST)
      */
-    public function store(Request $request)
+    public function store(StorePostRequest $request)
     {
-        $data = $request->validate([
-            'title' => 'required|string|min:2',
-            'body' => ['required', 'string', 'min:2']
-        ]);
+        $data = $request->validated();
         $data['author_id'] = 1;
 
         $post = Post::create($data);
@@ -37,38 +30,33 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     *  Display the specified resource. (GET w/ param)
      */
-    public function show(string $id)
+    public function show(Post $post) 
     {
-        return response()->json([
-            'message' => 'Test Message',
-            'data' => [
-                'id' => '1',
-                'title' => 'Test Title',
-                'body' => 'Test Body'
-            ]
-        ])->header('Test', 'Carl');
+        return response()->json($post);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified resource in storage. (PUT)
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Post $post)
     {
         $data = $request->validate([
             'title' => 'required|string|min:2',
             'body' => ['required', 'string', 'min:2']
         ]);
 
-        return $data;
+        $post->update($data);
+        return $post;
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage. (DELETE)
      */
-    public function destroy(string $id)
+    public function destroy(Post $post)
     {
+        $post->delete();
         return response()->noContent();
     }
 }
