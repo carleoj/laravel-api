@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
@@ -14,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return Post::all();
+        return PostResource::collection(Post::with('author')->paginate());
     }
 
     /**
@@ -26,15 +27,15 @@ class PostController extends Controller
         $data['author_id'] = 1;
 
         $post = Post::create($data);
-        return response()->json($post, 201);
+        return response()->json(new PostResource($post), 201);
     }
 
     /**
      *  Display the specified resource. (GET w/ param)
      */
-    public function show(Post $post) 
+    public function show(Post $post)
     {
-        return response()->json($post);
+        return new PostResource($post);
     }
 
     /**
@@ -48,7 +49,7 @@ class PostController extends Controller
         ]);
 
         $post->update($data);
-        return $post;
+        return new PostResource($post);
     }
 
     /**

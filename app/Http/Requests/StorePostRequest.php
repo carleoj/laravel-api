@@ -24,13 +24,17 @@ class StorePostRequest extends FormRequest
     {
         return [
             'title' => 'required|string|min:2',
-            'body' => ['required', 'string', 'min:2']
+            'body' => ['required', 'string', 'min:2'],
+            'tags' => 'array',
+            'tags.*' => 'string|min:2'
         ];
     }
 
     public function messages() {
         return [
-            // 'title' => 'Title is required'
+            'title.required' => 'Title is required',
+            'title.string' => 'Title must be valid string',
+            'title.min' => 'Title must be :min chars',
         ];
     }
 }
